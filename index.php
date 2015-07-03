@@ -24,9 +24,27 @@
 
 <body>
 <div class="container body-content">
-        <h1>Early AP Scores</h1>
+    <h1>Early AP Scores</h1>
 
-        <p class="lead">Get access to your AP scores on June 6th no matter where you are located. Enter your College Board username and password below and you will be redirected to your score report page. Don't worry though - your login information is never stored and we have no reason to want it anyways. Want more proof? View this project on GitHub: <a href="https://github.com/jbman223/EarlyAP">https://github.com/jbman223/EarlyAP</a>, you could even host your own if you still don't feel comfortable using the public version.</p>
+    <p class="lead">Get access to your AP scores on June 6th no matter where you are located. Enter your College Board
+        username and password below and you will be redirected to your score report page. Don't worry though - your
+        login information is never stored and we have no reason to want it anyways. Want more proof? View this project
+        on GitHub: <a href="https://github.com/jbman223/EarlyAP">https://github.com/jbman223/EarlyAP</a>, you could even
+        host your own if you still don't feel comfortable using the public version.</p>
+
+    <form class="form-inline">
+        <div class="input-group">
+            <input type="text" class="form-control" name="username" required />
+        </div>
+        <div class="input-group">
+            <input type="password" class="form-control" name="password" required />
+        </div>
+        <div class="input-group">
+            <button class="btn btn-success">
+                View My Scores <i class="glyphicon glyphicon-play-circle"></i>
+            </button>
+        </div>
+    </form>
 </div>
 <!-- /.container -->
 
