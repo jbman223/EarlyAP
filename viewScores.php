@@ -2,6 +2,8 @@
 session_start();
 require_once "simple_html_dom.php";
 error_reporting(E_ALL);
+$cookieFile = "cookie.txt";
+
 $url = "https://account.collegeboard.org/login/authenticateUser";
 
 $postData = "forgotPWUrl=forgotPassword%3FappId%3D287%26DURL%3Dhttps%25253A%25252F%25252Fapscore.collegeboard.org%25252Fscores%25252Fview-your-scores%26idp%3DECL&forgotUNUrl=forgotUsername%3FappId%3D287%26DURL%3Dhttps%25253A%25252F%25252Fapscore.collegeboard.org%25252Fscores%25252Fview-your-scores%26idp%3DECL&signUpUrl=signUp%3FappId%3D287%26idp%3DECL%26DURL%3Dhttps%25253A%25252F%25252Fapscore.collegeboard.org%25252Fscores%25252Fview-your-scores&DURL=https%3A%2F%2Fapscore.collegeboard.org%2Fscores%2Fview-your-scores&appId=287&LOGINURL=https%3A%2F%2Faccount.collegeboard.org%2Fscores%2Fview-your-scores&person.userName=".$_REQUEST['username']."&person.password=".$_REQUEST['password']."&__checkbox_rememberMe=false&get_login=";
@@ -10,7 +12,7 @@ $ch = curl_init();
 curl_setopt($ch, CURLOPT_URL, $url);
 curl_setopt($ch, CURLOPT_POST, true);
 curl_setopt($ch, CURLOPT_AUTOREFERER, true);
-curl_setopt($ch, CURLOPT_HEADER, false);
+curl_setopt($ch, CURLOPT_HEADER, true);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 curl_setopt($ch, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows; U; Windows NT 5.1; rv:1.7.3) Gecko/20041001 Firefox/0.10.1");
 curl_setopt( $ch, CURLOPT_POSTFIELDS, $postData);
@@ -19,25 +21,24 @@ curl_setopt($ch, CURLOPT_HTTPHEADER, array(
     "Content-Type: application/x-www-form-urlencoded"
 ));
 curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-curl_setopt($ch, CURLOPT_COOKIEFILE, 'cookie.txt');
-curl_setopt($ch, CURLOPT_COOKIEJAR, 'cookie.txt');
+curl_setopt($ch, CURLOPT_COOKIESESSION, true);
+curl_setopt($ch, CURLOPT_COOKIEJAR, $cookieFile);
+curl_setopt($ch, CURLOPT_COOKIEFILE, $cookieFile);
 
 $a = curl_exec($ch);
 curl_close($ch);
 
-if (!strstr($a, "By taking challenging AP courses and exams, you're preparing yourself to succeed in college and beyond.")) {
+
+if (!strstr($a, "Congratulations!")) {
     header("location: index.php");
+    echo $a;
     $_SESSION['alert'] = "<div class=\"alert alert-danger\">You entered an incorrect login.</div>";
     die();
 }
 
+
+
 $html = str_get_html($a);
-
-?>
-
-<?php
-session_start();
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
