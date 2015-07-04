@@ -1,5 +1,5 @@
 <?php
-
+session_start();
 
 ?>
 <!DOCTYPE html>
@@ -32,19 +32,22 @@
         on GitHub: <a href="https://github.com/jbman223/EarlyAP">https://github.com/jbman223/EarlyAP</a>, you could even
         host your own if you still don't feel comfortable using the public version.</p>
 
-    <form class="form-inline">
-        <div class="input-group">
-            <input type="text" class="form-control" name="username" required />
-        </div>
-        <div class="input-group">
-            <input type="password" class="form-control" name="password" required />
-        </div>
-        <div class="input-group">
-            <button class="btn btn-success">
-                View My Scores <i class="glyphicon glyphicon-play-circle"></i>
-            </button>
-        </div>
-    </form>
+    <div class="center-block text-center">
+        <? if (isset($_SESSION['alert'])) { echo $_SESSION['alert']; unset($_SESSION['alert']); } ?>
+        <form class="form-inline" action="viewScores.php" method="post">
+            <div class="form-group">
+                <input type="text" class="form-control" placeholder="Username" name="username" required />
+            </div>
+            <div class="form-group">
+                <input type="password" class="form-control" placeholder="Password" name="password" required />
+            </div>
+            <div class="form-group">
+                <button class="btn btn-success">
+                    View My Scores <i class="glyphicon glyphicon-play-circle"></i>
+                </button>
+            </div>
+        </form>
+    </div>
 </div>
 <!-- /.container -->
 

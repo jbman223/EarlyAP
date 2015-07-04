@@ -1,0 +1,20 @@
+.header {
+    padding-top: 15px;
+    display: inline;
+}
+h3 {
+    display: inline !important;
+}
+.awards {
+    display: inline !important;
+}
+.short-list{
+    display: inline;
+}
+.year-exams-container {
+    border-bottom: 1px solid black;
+}
+
+.span2 {
+    display:none;
+}
