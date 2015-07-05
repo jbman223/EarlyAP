@@ -28,11 +28,22 @@ curl_setopt($ch, CURLOPT_COOKIEFILE, $cookieFile);
 $a = curl_exec($ch);
 curl_close($ch);
 
+$logoutCH = curl_init();
+curl_setopt($logoutCH, CURLOPT_URL, "https://apscore.collegeboard.org/scores/logout.action");
+curl_setopt($logoutCH, CURLOPT_AUTOREFERER, true);
+curl_setopt($logoutCH, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_COOKIESESSION, true);
+curl_setopt($ch, CURLOPT_COOKIEJAR, $cookieFile);
+curl_setopt($ch, CURLOPT_COOKIEFILE, $cookieFile);
+$b = curl_exec($logoutCH);
+curl_close($logoutCH);
+
+
 
 if (!strstr($a, "Congratulations!")) {
     header("location: index.php");
     echo $a;
-    $_SESSION['alert'] = "<div class=\"alert alert-danger\">You entered an incorrect login.</div>";
+    $_SESSION['alert'] = "<div class=\"alert alert-danger\">You may have entered an incorrect login. Also, there could be an error with the site. Try logging in one more time.</div>";
     die();
 }
 
@@ -51,7 +62,7 @@ $html = str_get_html($a);
     <meta name="author" content="">
     <link rel="icon" href="../../favicon.ico">
 
-    <title>Starter Template for Bootstrap</title>
+    <title>Your AP Scores</title>
 
     <!-- Bootstrap core CSS -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
