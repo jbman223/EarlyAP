@@ -1,0 +1,15 @@
+{
+  "name": "earlyscores/earlyscores",
+  "description": "View AP scores early",
+  "minimum-stability": "dev",
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "Jacob Buckheit",
+      "email": "jbman223@gmail.com"
+    }
+  ],
+  "require": {
+    "guzzlehttp/guzzle": "6.2.0"
+  }
+}

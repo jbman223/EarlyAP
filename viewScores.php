@@ -2,7 +2,7 @@
 session_start();
 require_once "simple_html_dom.php";
 error_reporting(E_ALL);
-$cookieFile = "cookie.txt";
+$cookieFile = "tmp/".uniqid("cookie").".txt";
 
 $url = "https://account.collegeboard.org/login/authenticateUser";
 
@@ -41,12 +41,14 @@ curl_close($logoutCH);
 
 
 if (!strstr($a, "Congratulations!")) {
-    header("location: index.php");
-    echo $a;
+    //header("location: index.php");
+    echo htmlspecialchars($a);
     $_SESSION['alert'] = "<div class=\"alert alert-danger\">You may have entered an incorrect login. Also, there could be an error with the site. Try logging in one more time.</div>";
     die();
 }
 
+
+unlink($cookieFile);
 
 
 $html = str_get_html($a);
@@ -69,6 +71,17 @@ $html = str_get_html($a);
 
     <!-- Custom styles for this template -->
     <link href="css/site.css" rel="stylesheet">
+
+    <script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+        ga('create', 'UA-56057288-1', 'auto');
+        ga('send', 'pageview');
+
+    </script>
 </head>
 
 <body>
@@ -76,7 +89,7 @@ $html = str_get_html($a);
     <h1>Your AP Scores</h1>
 
     <? foreach ($html->find("div.year-scores") as $scoreBlock) {
-        echo str_replace("row-fluid", "row", str_replace('"span5"', '"col-md-6"', $scoreBlock->innertext));
+        echo str_replace("row-fluid", "row", str_replace('"span5"', '"col-md-6 col-sm-6 col-xs-6"', $scoreBlock->innertext));
     } ?>
 </div>
 <!-- /.container -->

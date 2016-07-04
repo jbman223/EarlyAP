@@ -1,13 +1,12 @@
 .header {
     padding-top: 15px;
-    display: inline;
+    text-align: center;
 }
-h3 {
-    display: inline !important;
+
+.headline .awards {
+    display: none;
 }
-.awards {
-    display: inline !important;
-}
+
 .short-list{
     display: inline;
 }
