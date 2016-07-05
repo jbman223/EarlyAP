@@ -127,11 +127,19 @@ session_start();
 <body>
 <div class="container body-content">
 
+    <div class="row" style="padding: 20px;">
+        <div class="alert alert-info">
+            <b>Thanks for all the support!</b> The site is severely overloaded, please be patient and keep trying to see
+            your scores.
+        </div>
+    </div>
+
     <div class="row">
         <div class="col-md-6">
             <h1>Early AP Scores</h1>
 
             <p class="lead">Access your AP Scores on July 5<sup>th</sup> no matter where you are in the world.</p>
+
 
             <div id="clockdiv" class="center-block">
                 <div>
@@ -295,7 +303,7 @@ session_start();
     $(".view-scores").submit(function (e) {
         e.preventDefault();
 
-        $(".alert").hide();
+        $(".alert-danger").hide();
 
 
         $(".form-container").hide(function () {
