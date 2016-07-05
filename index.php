@@ -131,6 +131,8 @@ session_start();
         <div class="alert alert-info">
             <b>Thanks for all the support!</b> The site is severely overloaded, please be patient and keep trying to see
             your scores.
+            <br />
+            <a href="http://secondary.earlyscores.com/">If you can't get your scores now, go to the alternate server</a>
         </div>
     </div>
 
