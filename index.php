@@ -34,10 +34,11 @@ session_start();
             a.async = 1;
             a.src = g;
             m.parentNode.insertBefore(a, m)
-        })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+        })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
 
-        ga('create', 'UA-56057288-1', 'auto');
+        ga('create', 'UA-80297452-1', 'auto');
         ga('send', 'pageview');
+
     </script>
 
     <script>
@@ -72,7 +73,7 @@ session_start();
 
         body, html {
             height: 100%;
-            background-color: white;
+            background-color: #356AA0;
         }
 
         .footer {
@@ -84,7 +85,7 @@ session_start();
 
         .body-content {
             background: white fixed;
-            height: 100%;
+            min-height: 100%;
         }
 
         #clockdiv h1 {
@@ -267,7 +268,7 @@ session_start();
                         }(document, 'script', 'twitter-wjs');</script>
                 </div>
 
-                <hr />
+                <hr/>
             </div>
         </div>
     </div>
