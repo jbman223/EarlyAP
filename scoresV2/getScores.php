@@ -1,7 +1,7 @@
 <?php
-die();
-
 session_start();
+
+header("Access-Control-Allow-Origin: https://earlyscores.com");
 
 require '../vendor/autoload.php';
 require_once "../simple_html_dom.php";
@@ -9,12 +9,13 @@ require_once "../simple_html_dom.php";
 use GuzzleHttp\Client;
 use GuzzleHttp\Cookie\SessionCookieJar;
 
+
+
 $client = new Client([
     'timeout'  => 5.0
 ]);
 
-$jar = new SessionCookieJar('SESSION_STORAGE', true);
-
+$jar = new \GuzzleHttp\Cookie\CookieJar;
 
 $logIn = $client->request('POST', 'https://account.collegeboard.org/login/authenticateUser', [
     'form_params' => [
@@ -41,10 +42,18 @@ $scores = $client->get("https://apscore.collegeboard.org/scores/view-your-scores
 $scores = $scores->getBody();
 
 $stringBody = (string) $scores;
+$html = str_get_html($stringBody);
+
+$logOut = $client->get('https://apscore.collegeboard.org/scores/logout.action', [
+    'cookies' => $jar
+]);
+
+//print_r($html->find("div.year-scores"));
+?>
 
 
-if (!strstr($stringBody, "Congratulations!")) {
-    die(json_encode(array("error" => "Could not log in.", "page" => $stringBody)));
-}
-
-die(json_encode(array("success" => "Log in successful")));
+<?php foreach ($html->find("div.year-scores") as $scoreBlock) {
+    //$scoreBlock
+    //$scoreBlock->find("");
+    echo str_replace("row-fluid", "row", str_replace('"span5"', '"col-md-6 col-sm-6 col-xs-6"', $scoreBlock->innertext));
+} ?>
