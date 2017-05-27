@@ -1,5 +1,9 @@
 <?php
 session_start();
+
+if (strstr($_SERVER['HTTP_REFERER'], "governer.collegeboard.com")) {
+    die();
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -9,9 +13,12 @@ session_start();
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+
     <meta name="description"
           content="View your AP Scores on the first day they come out without using a proxy! Early access to AP scores.">
     <meta name="author" content="">
+
+
     <link rel="icon" href="../../favicon.ico">
 
     <title>Early AP Score Access</title>
@@ -128,12 +135,17 @@ session_start();
 <div class="container body-content">
 
     <div class="row" style="padding: 20px;">
-        <div class="alert alert-info">
-            <b>Thanks for all the support!</b> The site is severely overloaded, please be patient and keep trying to see
-            your scores.
+<!--        <div class="alert alert-success">-->
+<!--            <b>Thanks for all the support!</b> The site should be fully functional!-->
+<!--            <br />-->
+<!--            <a href="http://fourth.earlyscores.com/">If you can't get your scores now, go to the alternate server (#3)</a>-->
+<!--        </div>-->
+
+        <!--<div class="alert alert-info">
+            <b>Migration In Progress</b> Migrating, please keep updating scores
             <br />
-            <a href="http://secondary.earlyscores.com/">If you can't get your scores now, go to the alternate server</a>
-        </div>
+            <a href="http://fourth.earlyscores.com/">If you can't get your scores now, go to the alternate server (#3)</a>
+        </div>-->
     </div>
 
     <div class="row">
@@ -263,8 +275,8 @@ session_start();
                 <p class="text-center">Show your friends how to get their scores early too:</p>
 
                 <div class="share" style="display: flex;justify-content: center; justify-items: center;">
-                    <div class="fb-like" data-href="https://earlyscores.com" data-layout="button" data-action="like"
-                         data-size="large" data-show-faces="false" data-share="true" style="margin-right: 3px;"></div>
+                    <div class="fb-like" data-href="https://earlyscores.com" data-layout="button_count" data-action="like"
+                         data-size="large" data-show-faces="true" data-share="true" style="margin-right: 3px;"></div>
                     <a href="https://twitter.com/share" class="twitter-share-button"
                        data-text="Get your AP scores early from anywhere in the world." data-size="large">Tweet</a>
                     <script>!function (d, s, id) {
@@ -312,7 +324,13 @@ session_start();
             $(".loading").find(".loading-text").text("Logging in").parent().show("medium");
         });
 
-        $.post("scores/login.php", {
+        //site dormant
+//        $(".loading").hide(function () {
+//            $(".alert-danger").text("The site is in dormant mode, and will be ready for 2017 AP Scores").show();
+//            $(".form-container").show();
+//        });
+//        return;
+        $.post("/scoresV2/login.php", {
             username: $("input[name=username]").val(),
             password: $("input[name=password]").val()
         }, function (data) {
@@ -322,15 +340,15 @@ session_start();
                 //logged in successfully
                 $(".loading").find(".loading-text").text("Logged in successfully, loading scores.");
 
-                $.post("scores/getScores.php", function (data) {
+                $.post("/scoresV2/getScores.php", {
+                    username: $("input[name=username]").val(),
+                    password: $("input[name=password]").val()
+                }, function (data) {
                     console.log(data);
                     $(".loading").hide(function () {
                         $(".score-container").html(data).show(function () {
                             $(".top-share").show();
                         });
-                    });
-                    $.post("scores/logout.php", function (data) {
-                        console.log(data);
                     });
                 });
             } else {

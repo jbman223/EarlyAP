@@ -1,6 +1,4 @@
 <?php
-die();
-
 session_start();
 
 require '../vendor/autoload.php';
@@ -14,7 +12,7 @@ $client = new Client([
     'timeout'  => 5.0
 ]);
 
-$jar = new SessionCookieJar('SESSION_STORAGE', true);
+$jar = new \GuzzleHttp\Cookie\CookieJar;
 
 $logOut = $client->get('https://apscore.collegeboard.org/scores/logout.action', [
     'cookies' => $jar

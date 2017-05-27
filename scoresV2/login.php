@@ -1,7 +1,7 @@
 <?php
-die();
-
 session_start();
+
+header("Access-Control-Allow-Origin: https://earlyscores.com");
 
 require '../vendor/autoload.php';
 require_once "../simple_html_dom.php";
@@ -13,8 +13,7 @@ $client = new Client([
     'timeout'  => 5.0
 ]);
 
-$jar = new SessionCookieJar('SESSION_STORAGE', true);
-
+$jar = new \GuzzleHttp\Cookie\CookieJar;
 
 $logIn = $client->request('POST', 'https://account.collegeboard.org/login/authenticateUser', [
     'form_params' => [
