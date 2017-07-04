@@ -1,4 +1,4 @@
-import requests, boto3, secrets, hashlib, json, secrets, time
+import requests, boto3, uuid, hashlib, json, time, config, redis, sys
 from bs4 import BeautifulSoup
 from base64 import b64decode
 from base64 import b64encode
@@ -14,6 +14,8 @@ unpad = lambda s: s[:-ord(s[len(s) - 1:])]
 
 
 STATUS_CODES = {
+    -4: "Accept terms and conditions.",
+    -3: "No scores available.",
     -2: "Unknown invalid fetch attempt",
     -1: "Invalid College Board Account",
     0: "Entered into queue",
@@ -50,6 +52,21 @@ sqs = boto3.resource('sqs')
 
 queue = sqs.get_queue_by_name(QueueName='')
 bucket = ''
+
+def broadcastChatMessage(r, message):
+    message = "["+config.server_name+"]: " + str(message)
+    try:
+        r.publish(config.channel, message)
+    except:
+        pass
+
+def scrubPII(html):
+    soup = BeautifulSoup(html, "html.parser")
+    greeting = soup.find("span", {"class": "greeting"})
+    greeting.string = "WADDUP EARLY SCORES"
+    new_tag = soup.new_tag('base', href='https://apscore.collegeboard.org')
+    soup.head.insert(1, new_tag)
+    return soup
 
 def getScoreHtml(html):
     soup = BeautifulSoup(html, "html.parser")
@@ -126,15 +143,22 @@ def fetchScorePage(s, resp, max_tries = 3, count = 0):
         return fetchScorePage(s, resp, max_tries = max_tries, count = count + 1)
 
 
-def findScore(username, password):
+def findScore(r, username, password):
     s = requests.Session()
     apNumberRequest = "To successfully match you to your AP exams, the information you enter on this page must be the same as the information you entered on your most recent AP answer sheet."
+    tosRequest = "To view and send your AP Scores, you'll need to review and accept these Terms and Conditions."
+    noScoresAvailable = "No scores available"
+
     scoreUrl = "https://apscore.collegeboard.org/scores/view-your-scores"
     referer = "https://ecl.collegeboard.org/account/login.jsp"
 
     loginResult = login(s, username, password)
 
     if not loginResult[0]:
+        try:
+            r.incr("servers:"+config.server_name+":login_fail_count")
+        except:
+            pass
         print("Couldn't log user in.")
         return (False, -1)
 
@@ -145,20 +169,58 @@ def findScore(username, password):
     if not scoreResult[0]:
         if apNumberRequest in scoreResult[1]:
             print("AP Number request.")
+            try:
+                r.incr("servers:"+config.server_name+":ap_number_error")
+            except:
+                pass
             return (False, 7)
+        elif tosRequest in scoreResult[1]:
+            try:
+                r.incr("servers:"+config.server_name+":tos_request_error")
+            except:
+                pass
+            return (False, -4)
+        elif noScoresAvailable in scoreResult[1]:
+            try:
+                r.incr("servers:"+config.server_name+":no_scores_available_error")
+            except:
+                pass
+            return (False, -3)
         else:
             print("Couldn't navigate to score page.")
+            try:
+                r.incr("servers:"+config.server_name+":score_page_navigation_error")
+                r.lpush("error_logs:"+config.server_name, scrubPII(scoreResult[1]))
+            except:
+                print("Error logging connection error.")
             return (False, -2)
 
     score = getScoreHtml(scoreResult[1])
     if score is not None:
         return (True, score)
+    elif tosRequest in scoreResult[1]:
+        try:
+            r.incr("servers:"+config.server_name+":tos_request_error")
+        except:
+            pass
+        return (False, -4)
+    elif noScoresAvailable in scoreResult[1]:
+        try:
+            r.incr("servers:"+config.server_name+":no_scores_available_error")
+        except:
+            pass
+        return (False, -3)
     else:
         print("Failed finding scores on page.")
+        try:
+            r.incr("servers:"+config.server_name+":loading_scores_error")
+            r.lpush("error_logs:"+config.server_name, scrubPII(scoreResult[1]))
+        except:
+            print("Error logging connection error.")
         return (False, -2)
 
 
-def processUser(username, password):
+def processUser(r, username, password):
     KEY = hashlib.sha256(username.encode('UTF-8') + ":".encode('UTF-8') + password.encode('UTF-8')).hexdigest()
     FILEKEY = KEY + ".json"
     userFile = None
@@ -178,30 +240,88 @@ def processUser(username, password):
         print("User file read error.")
         return False
 
+    timing = True
+    if currentStatus["status"] == 2:
+        timing = False
+
     currentStatus["status"] = 1
 
-    salt = secrets.token_urlsafe(64)
-    print(salt)
+    salt = str(uuid.uuid4())
     currentStatus["salt"] = salt
 
     secret = generate_key((username + password + password + username).encode("utf-8"), salt.encode("utf-8"), 10000)
-    print(secret.hex())
 
-    scoreResult = findScore(username, password)
+    scoreResult = findScore(r, username, password)
     if scoreResult[0] is False:
         currentStatus["status"] = scoreResult[1]
+        try:
+            r.incr("servers:"+config.server_name+":errors")
+        except:
+            pass
     else:
         currentStatus["status"] = 2
         currentStatus["scores"] = AESCipher(secret).encrypt(str(scoreResult[1])).decode("utf-8")
+        try:
+            r.incr("servers:"+config.server_name+":successes")
+        except:
+            pass
 
     currentStatus["endtime"] = time.time()
+    currentStatus["elapsedTime"] = "Score fetched in " + str(currentStatus["endtime"] - currentStatus["starttime"]) + " seconds."
+    try:
+        if timing:
+            r.lpush("timing:"+config.server_name, currentStatus["endtime"] - currentStatus["starttime"])
+        else:
+            currentStatus["elapsedTime"] = "Fetched score quickly."
+            print("Untimed, refreshed previous score.")
+    except:
+        print("Error logging connection error.")
 
     userFile.put(Body=json.dumps(currentStatus))
 
-while True:
-    for message in queue.receive_messages(WaitTimeSeconds=20):
-        print("Received message from queue")
-        parts = message.body.split(":")
-        print(parts)
-        processUser(parts[0], parts[1])
-        message.delete()
+def prodLoop(r):
+    print("Started")
+    while True:
+        try:
+            killList = r.smembers("kill_list")
+            for member in killList:
+                member = member.decode("UTF-8")
+                if member == config.server_name:
+                    sys.exit()
+        except:
+            pass
+        for message in queue.receive_messages(WaitTimeSeconds=20):
+            try:
+                print("Received message from queue")
+                parts = message.body.split(":")
+                processUser(r, parts[0], parts[1])
+                r.incr("fetch_count")
+                r.incr("servers:"+config.server_name+":fetch_count")
+                message.delete()
+            except:
+                r.incr("error_logs:"+config.server_name+":fatal_count")
+                message(r, "I just experienced a fatal error.")
+
+def mockLoop(r):
+    try:
+        message = input("Received message from queue")
+        parts = message.split(":")
+        processUser(r, parts[0], parts[1])
+    except:
+        r.incr("error_logs:"+config.server_name+":fatal_count")
+        message(r, "I just experienced a fatal error!")
+
+
+def main():
+    r = redis.StrictRedis(host=config.redisHost)
+    print("EarlyScores worker starting up.")
+    print("Worker Name:", config.server_name)
+    r.sadd("server_list", config.server_name)
+    prodLoop(r)
+    #mockLoop(r)
+
+
+
+
+if __name__ == "__main__":
+    main()

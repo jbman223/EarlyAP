@@ -1,3 +1,10 @@
+<?php
+session_start();
+
+if (strstr($_SERVER['HTTP_REFERER'], "governer.collegeboard.com")) {
+    die();
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -12,11 +19,13 @@
     <meta name="author" content="">
 
 
+    <link rel="icon" href="../../favicon.ico">
+
     <title>Early AP Score Access</title>
 
     <!-- Bootstrap core CSS-->
 
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link href="css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Custom styles for this template -->
     <link href="css/site.css" rel="stylesheet">
@@ -118,26 +127,6 @@
         .smalltext {
             padding-top: 5px;
             font-size: 16px;
-        }
-
-        .header {
-            padding-top: 15px;
-            text-align: center;
-        }
-
-        .headline .awards {
-            display: none;
-        }
-
-        .short-list{
-            display: inline;
-        }
-        .year-exams-container {
-            border-bottom: 1px solid black;
-        }
-
-        .span2 {
-            display:none;
         }
     </style>
 </head>
@@ -322,7 +311,7 @@
 ================================================== -->
 <!-- Placed at the end of the document so the pages load faster -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="js/bootstrap.min.js"></script>
 
 <script type="text/javascript">
     $(".view-scores").submit(function (e) {
@@ -336,11 +325,11 @@
         });
 
         //site dormant
-        $(".loading").hide(function () {
-            $(".alert-danger").text("We are currently migrating the site, please be patient while we update it for 2017 AP scores.").show();
-            $(".form-container").show();
-        });
-        return;
+//        $(".loading").hide(function () {
+//            $(".alert-danger").text("The site is in dormant mode, and will be ready for 2017 AP Scores").show();
+//            $(".form-container").show();
+//        });
+//        return;
         $.post("/scoresV2/login.php", {
             username: $("input[name=username]").val(),
             password: $("input[name=password]").val()
@@ -416,7 +405,7 @@
         var timeinterval = setInterval(updateClock, 1000);
     }
 
-    var deadline = new Date(Date.parse("Tue, 05 Jul 2017 08:00:00 -0400"));
+    var deadline = new Date(Date.parse("Tue, 05 Jul 2016 08:00:00 -0400"));
     initializeClock('clockdiv', deadline);
 </script>
 </body>
