@@ -1,11 +1,11 @@
 
-#Early Scores#
+# Early Scores
 The most popular AP® test score retrieval service, trusted by over a hundred thousand AP® students. This service is in **no way** affiliated with or endorsed by the College Board®.
 
-##About Early Scores##
+## About Early Scores
 Early Scores acts as a proxy to allow students to retrieve their scores on July 5th no matter where they are in the world. Retrieving scores poses a unique problem, as students must provide their username and password for the College Board® website in return for highly confidential information. Early Scores aims to make this process as fast and safe as possible, while scaling to support thousands of users simultaneously and providing accurate results. This problem is difficult to solve due to the unknown and uncontrollable variable of the College Board® and their website. 
 
-##How does it work##
+## How does it work
 The following image explains the general flow of information for EarlyScores. The front end of the website is cached in Amazon CloudFront, which will handle all the users we hope to have.
 
 **The non-technical walk-through**
@@ -19,20 +19,20 @@ Also, you can always go back and get a box you had previously stored (temporary 
 
 Sorry if this was extremely hard to understand and makes no sense!
 
-##How to use##
+## How to use
 There are two ways to use Early Scores
 
  1. Navigate to https://earlyscores.com (See: How can I ensure my account's safety?)
  2. Host your own version of the service.
 
-##Hosting your own##
+## Hosting your own
 If you would feel more comfortable, feel free to host your own version of Early Scores. The folder `/old` contains the simple, non-distributed workflow that sustained the early days of the site. Simply place `/old` on any web server that runs PHP, and your scores will be fetched all on your own server. 
 If you want to host the distributed version, contact me. It too me many long hours to get all of the AWS providers working together and there's no way I can describe it here.
 
-##How can I ensure my account's safety?##
+## How can I ensure my account's safety?
 You have no reason to worry about the safety of EarlyScores.com hosted service; however, account security should always be a top priority. To ensure your account is absolutely safe when using EarlyScores, you can create a temporary password. Navigate to the College Board website to change your password. After your password is changed, head to EarlyScores.com and log in using your temporary information. Before you click the green button, click the Advanced Settings link. Using the check mark,  click the "Fetch using temporary password mode." This mode allows you to continue to look at your scores using your temporary password rather than your real College Board account, even after you change your password. After your scores have been fetched by the system, change your username and password. This way, the password you entered into our service is different from your real password. 
 
-##How does temporary password mode work?##
+## How does temporary password mode work?
 Scores are fetched and encrypted using the username and password you enter in to EarlyScores. Using industry standard [hashing](https://en.wikipedia.org/wiki/Hash_function) and [encryption](https://en.wikipedia.org/wiki/Encryption) algorithms, your scores are uniquely identifiable to your account, while never actually knowing the details of your account. Because the distributed system holds your files for 1 day before they expire, you could use the temporary username and password to access your encrypted and previously fetched scores while your College Board account's password is no longer the same. 
 
 If you have any questions, please ask them in the Github Issues section.
