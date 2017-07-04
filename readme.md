@@ -22,7 +22,7 @@ Sorry if this was extremely hard to understand and makes no sense!
 ## How to use
 There are two ways to use Early Scores
 
- 1. Navigate to https://earlyscores.com (See: How can I ensure my account's safety?)
+ 1. Navigate to https://earlyscores.com (See: [How can I ensure my account's safety?](https://github.com/jbman223/EarlyAP/blob/master/readme.md#how-can-i-ensure-my-accounts-safety))
  2. Host your own version of the service.
 
 ## Hosting your own
