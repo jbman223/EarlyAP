@@ -43,7 +43,23 @@ $stringBody = (string) $scores;
 
 
 if (!strstr($stringBody, "Congratulations!")) {
-    die(json_encode(array("error" => "Could not log in.", "page" => $stringBody)));
+	if (strstr($stringBody, "To view and send your AP Scores, you'll need to review and accept these Terms and Conditions.")) {
+        $acceptTandC = $client->request('POST', 'https://apscore.collegeboard.org/scores/termsAndConditions.action', [
+            'form_params' => [
+                'termsChecked' => 'true',
+                '__checkbox_termsChecked' => 'true'
+            ],
+            'cookies' => $jar
+        ]);
+        $acceptTandC = $acceptTandC->getBody();
+        $scores = $client->get("https://apscore.collegeboard.org/scores/view-your-scores", [
+            'cookies' => $jar
+        ]);
+        $scores = $scores->getBody();
+        $stringBody = (string) $scores;
+    } else {
+        die(json_encode(array("error" => "Could not log in.", "page" => $stringBody)));
+    }
 }
 
 die(json_encode(array("success" => "Log in successful")));
