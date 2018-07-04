@@ -1,0 +1,19 @@
+{
+  "name": "earlyscores",
+  "version": "1.0.0",
+  "description": "EarlyScores score fetch application.",
+  "main": "index.js",
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.2",
+    "express": "^4.16.3",
+    "redis": "^2.8.0",
+    "request": "^2.87.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "EarlyScores",
+  "license": "MIT"
+}

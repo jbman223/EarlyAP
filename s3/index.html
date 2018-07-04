@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+
+    <link rel="apple-touch-icon" sizes="57x57" href="/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192"  href="/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+
+    <meta name="description"
+          content="View your AP Scores on the first day they come out without using a proxy! Early access to AP scores. Get your 2018 AP Scores.">
+    <meta name="author" content="">
+    <meta name="google-site-verification" content="vH6bDJ16cqISceTMtXc-vIsttUVslRnA47MD9CJxo-Q" />
+
+    <title>Early AP Score Access - EarlyScores - Get your 2018 AP Scores early</title>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+
+    <script>
+        (function (i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r;
+            i[r] = i[r] || function () {
+                    (i[r].q = i[r].q || []).push(arguments)
+                }, i[r].l = 1 * new Date();
+            a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0];
+            a.async = 1;
+            a.src = g;
+            m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+        ga('create', 'UA-80297452-1', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+    <script>
+        window.fbAsyncInit = function () {
+            FB.init({
+                appId: '514445682088925',
+                xfbml: true,
+                version: 'v2.6'
+            });
+        };
+
+        (function (d, s, id) {
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) {
+                return;
+            }
+            js = d.createElement(s);
+            js.id = id;
+            js.src = "//connect.facebook.net/en_US/sdk.js";
+            fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));
+    </script>
+
+    <script src="https://use.fontawesome.com/74f6d718da.js"></script>
+
+    <style>
+        .headline {
+            display: block;
+
+        }
+
+        body, html {
+            height: 100%;
+            background-color: #356AA0;
+        }
+
+        .footer {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            left: 0;
+        }
+
+        .body-content {
+            background: white fixed;
+            min-height: 100%;
+        }
+
+        #clockdiv h1 {
+            color: #396;
+            font-weight: 100;
+            font-size: 40px;
+            margin: 40px 0px 20px;
+        }
+
+        #clockdiv {
+            color: #fff;
+            display: block;
+            font-weight: 100;
+            text-align: center;
+            font-size: 30px;
+        }
+
+        #clockdiv > div {
+            padding: 10px;
+            border-radius: 3px;
+            background: #356AA0;
+            display: inline-block;
+        }
+
+        #clockdiv div > span {
+            padding: 15px;
+            border-radius: 3px;
+            background: #02376D;
+            display: inline-block;
+        }
+
+        .smalltext {
+            padding-top: 5px;
+            font-size: 16px;
+        }
+
+        .header {
+            padding-top: 15px;
+            text-align: center;
+        }
+
+        .headline .awards {
+            display: none;
+        }
+
+        .short-list {
+            display: inline;
+        }
+
+        .year-exams-container {
+            border-bottom: 1px solid black;
+        }
+
+        .span2 {
+            display: none;
+        }
+
+        .ap-number-form-container .visuallyhidden {
+            display: none;
+        }
+
+        .grey {
+            padding: 3px;
+            background-color: #f7f7f7;
+        }
+
+        .crosstext {
+            width: 100%;
+            text-decoration: bold;
+            text-align: center;
+        }
+
+        #inputGenderF {
+            margin-right: 2px;
+        }
+
+        #inputGenderM {
+            margin-right: 2px;
+        }
+
+        [for="inputGenderF"] {
+            padding-top: 4px;
+            padding-right: 10px;
+        }
+
+        [for="inputGenderM"] {
+            padding-top: 4px;
+        }
+
+        [for="inputGenderFemale"] {
+            padding-right: 10px;
+        }
+
+        .ap-number-form-actions {
+            margin-top: 20px;
+        }
+
+        .tos-box {
+            padding: 5px;
+            border-radius: 5px;
+            border: #dadddd solid 1px;
+        }
+    </style>
+</head>
+<body>
+<div class="container body-content">
+
+        <div class="row mb-2">
+                <nav class="navbar navbar-expand-lg navbar-light bg-light" style="width: 100%;">
+                    <a class="navbar-brand" href="/">EarlyScores</a>
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item active">
+                            <a class="nav-link" href="/">View Scores</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="proxy.html">Proxy</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/articles">AP Score Articles</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/articles/how-to-get-2018-ap-scores.html">How to get your 2018 AP Scores</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/articles/when-do-ap-scores-come-out-2018.html">2018 AP Score Release Date</a>
+                        </li>
+                    </ul>
+                    </div>
+                </nav>
+            </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <h1>Early AP Scores</h1>
+
+            <p class="lead">Access your AP Scores on July 5<sup>th</sup> no matter where you are in the world.</p>
+
+            <div class="d-flex justify-items-center flex-row"><p class="small mr-3">Follow us on Twitter to stay up to date!</p> <a class="ml-3 small twitter-follow-button"
+                href="https://twitter.com/EarlyScores" data-show-count="false">
+              Follow @EarlyScores</a></div>
+
+            <div class="alert alert-info update-me">
+                <p class="lead">Get an email or text when scores come out</p>
+                <form style="margin-top: 15px">
+                    <div class="form-group">
+                        <input class="form-control" type="text" placeholder="Email or phone" name="update_email"
+                               id="update_email"/>
+                        <p class="help-block">Enter your email or phone number, and when scores come out we will let you know.</p>
+                    </div>
+                </form>
+                <a href="#" class="update-button btn btn-primary">Let me know</a>
+                <p class="small text-muted">We will only send you one message in July reminding you to check your scores. <a href="privacy.html">Your information is never sold. See our privacy policy.</a></p>
+            </div>
+
+
+            <div style="max-width: 100%; margin-top: 15px; margin-bottom: 15px;">
+                <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+                <!-- Responsive EarlyScores -->
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-client="ca-pub-6444542581426135"
+                     data-ad-slot="3653508860"
+                     data-ad-format="auto"></ins>
+                <script>
+                    (adsbygoogle = window.adsbygoogle || []).push({});
+                </script>
+            </div>
+
+            <div class="d-md-none">
+                <div class="media">
+                    <div class="align-self-center mr-3">
+                        <i class="fa fa-lock fa-5x" aria-hidden="true"></i>
+                    </div>
+                    <div class="media-body">
+                        <h4 class="media-heading">Secure</h4>
+                        <p>Your College Board account information is only used temporarily to access your scores, and is
+                            not
+                            stored by EarlyScores.com.</p>
+                        <div class="secure">
+                            <p><a href="#" class="learn-more-security">Learn more about how Early Scores secures your
+                                data.</a></p>
+                            <p class="security-brief" style="display:none;">
+                                At Early Scores, security is our number one concern. We want to ensure that only you
+                                have
+                                access
+                                to only your scores. To make sure this is true, we utilize many state of the art
+                                hashing
+                                and
+                                encryption algorithms. Your username and password are never stored on our servers. Your
+                                scores
+                                are encrypted, and can only be viewed by you. <a
+                                    href="https://github.com/jbman223/EarlyAP"
+                                    target="_blank">If you would like to read
+                                more
+                                about the security in place with EarlyScores, please see our GitHub repository.</a></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-none d-sm-none d-md-block">
+                <div class="media">
+                    <div class="align-self-center mr-3">
+                        <i class="fa fa-lock fa-5x" aria-hidden="true"></i>
+                    </div>
+                    <div class="media-body">
+                        <h4 class="media-heading">Secure</h4>
+                        <p>Your College Board account information is only used temporarily to access your scores, and is
+                            not
+                            stored by EarlyScores.com.</p>
+                        <div class="secure">
+                            <p><a href="#" class="learn-more-security">Learn more about how Early Scores secures your
+                                data.</a></p>
+                            <p class="security-brief" style="display:none;">
+                                At Early Scores, security is our number one concern. We want to ensure that only you
+                                have
+                                access
+                                to only your scores. To make sure this is true, we utilize many industry standard
+                                hashing
+                                and
+                                encryption algorithms. Your username and password are never stored on our servers. Your
+                                scores
+                                are encrypted, and can only be viewed by you. <a
+                                    href="https://github.com/jbman223/EarlyAP"
+                                    target="_blank">If you would like to read
+                                more
+                                about the security in place with EarlyScores, please see our GitHub repository.</a></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="media mb-2">
+                    <div class="align-self-center mr-3">
+                        <i class="fa fa-users fa-3x" aria-hidden="true"></i>
+                    </div>
+                    <div class="media-body">
+                        <h4 class="media-heading">Trusted</h4>
+                        EarlyScores.com is the leading provider of early score access. Over 700,000 AP&reg; students
+                        trust
+                        EarlyScores to fetch their scores first.
+                    </div>
+                </div>
+
+
+                <div class="media mb-2">
+                    <div class="align-self-center mr-3">
+                        <i class="fa fa-check-circle-o fa-4x" aria-hidden="true"></i>
+                    </div>
+                    <div class="media-body">
+                        <h4 class="media-heading">Accurate</h4>
+                        <p>Your scores are pulled directly from the College Board website and displayed on your
+                            computer.</p>
+                    </div>
+                </div>
+
+                <div class="media mb-2">
+                    <div class="align-self-center mr-3">
+                        <i class="fa fa-plus-circle fa-4x" aria-hidden="true"></i>
+                    </div>
+                    <div class="media-body">
+                        <h4 class="media-heading">New: Temporary Password</h4>
+                        <p><a href="#" class="learn-more-temp">Learn more about this advanced security feature</a></p>
+                        <div class="temp-brief" style="display:none;">
+                            <p>Early Scores is proud to announce a new feature for 2017 score fetching. If you are
+                                concerned
+                                about the safety of your account, Early Scores now supports temporary fetch mode. This
+                                simple
+                                mode will allow you to fetch scores using your temporary username and password even
+                                after
+                                you've
+                                reset your password on the College Board website. Follow these steps to enable this
+                                feature:</p>
+                            <ol>
+                                <li>
+                                    <a target="_blank"
+                                       href="https://cbaccount.collegeboard.org/iamweb/secure/smartUpdate?navId=www-st-acct">Navigate
+                                        to the College Board website.</a> Sign in to your account.
+                                </li>
+                                <li>If you did not follow the link above, navigate to the account settings page.</li>
+                                <li>Scroll down the page to change your password.</li>
+                                <li>Create a temporary password. Write down your temporary username and password for
+                                    later
+                                    use.
+                                </li>
+                                <li><a href="#" class="enable-temp-and-use">Enable advanced settings and Temporary
+                                    Password
+                                    mode by clicking this link</a> Sign in to Early Scores with your temporary password.
+                                </li>
+                                <li>Wait for your scores to be fetched and appear on the page.</li>
+                                <li>Head back to the College Board website and restore your real password.</li>
+                                <li>From now on, use your temporary username and password to log into Early Scores. Make
+                                    sure the <b>Fetch scores with temporary password.</b> checkbox is checked, or your
+                                    scores may be overwritten.
+                                </li>
+                            </ol>
+                            <p>
+                                If you need to toggle the checkbox, see the "Advanced Settings" link on the right hand
+                                side.<br/>
+                                <a href="https://github.com/jbman223/EarlyAP"
+                                   target="_blank">If you would like to read
+                                    more
+                                    about the security in place with EarlyScores, please see our GitHub repository.</a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="long-message alert alert-info" style="display: none;"></div>
+
+            <div class="alert alert-warning debug" style="display: none;">
+            </div>
+
+            <div class="top-share" style="display: none;">
+                <h1 class="text-center">Your AP Scores</h1>
+
+                <p class="text-center">Show your friends how to get their scores early too (They won't see your
+                    scores):</p>
+
+                <div class="share" style="display:flex;justify-content: center; justify-items: center;">
+                    <div class="fb-like" data-href="https://earlyscores.com" data-layout="button" data-action="like"
+                         data-size="large" data-show-faces="false" data-share="true" style="margin-right: 3px;"></div>
+                    <a href="https://twitter.com/share" class="twitter-share-button"
+                       data-text="Get your AP scores early from anywhere in the world." data-size="large">Tweet</a>
+                </div>
+            </div>
+
+            <div class="loading text-center" style="display: none;">
+
+                <div class="alert alert-info loading-messages" style="display: none;"></div>
+
+                <div class="center-block">
+                    <svg width='106px' height='106px' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"
+                         preserveAspectRatio="xMidYMid" class="uil-default">
+                        <rect x="0" y="0" width="100" height="100" fill="none" class="bk"></rect>
+                        <rect x='46.5' y='40' width='7' height='20' rx='5' ry='5' fill='#356aa0'
+                              transform='rotate(0 50 50) translate(0 -30)'>
+                            <animate attributeName='opacity' from='1' to='0' dur='1s' begin='0s'
+                                     repeatCount='indefinite'/>
+                        </rect>
+                        <rect x='46.5' y='40' width='7' height='20' rx='5' ry='5' fill='#356aa0'
+                              transform='rotate(30 50 50) translate(0 -30)'>
+                            <animate attributeName='opacity' from='1' to='0' dur='1s' begin='0.08333333333333333s'
+                                     repeatCount='indefinite'/>
+                        </rect>
+                        <rect x='46.5' y='40' width='7' height='20' rx='5' ry='5' fill='#356aa0'
+                              transform='rotate(60 50 50) translate(0 -30)'>
+                            <animate attributeName='opacity' from='1' to='0' dur='1s' begin='0.16666666666666666s'
+                                     repeatCount='indefinite'/>
+                        </rect>
+                        <rect x='46.5' y='40' width='7' height='20' rx='5' ry='5' fill='#356aa0'
+                              transform='rotate(90 50 50) translate(0 -30)'>
+                            <animate attributeName='opacity' from='1' to='0' dur='1s' begin='0.25s'
+                                     repeatCount='indefinite'/>
+                        </rect>
+                        <rect x='46.5' y='40' width='7' height='20' rx='5' ry='5' fill='#356aa0'
+                              transform='rotate(120 50 50) translate(0 -30)'>
+                            <animate attributeName='opacity' from='1' to='0' dur='1s' begin='0.3333333333333333s'
+                                     repeatCount='indefinite'/>
+                        </rect>
+                        <rect x='46.5' y='40' width='7' height='20' rx='5' ry='5' fill='#356aa0'
+                              transform='rotate(150 50 50) translate(0 -30)'>
+                            <animate attributeName='opacity' from='1' to='0' dur='1s' begin='0.4166666666666667s'
+                                     repeatCount='indefinite'/>
+                        </rect>
+                        <rect x='46.5' y='40' width='7' height='20' rx='5' ry='5' fill='#356aa0'
+                              transform='rotate(180 50 50) translate(0 -30)'>
+                            <animate attributeName='opacity' from='1' to='0' dur='1s' begin='0.5s'
+                                     repeatCount='indefinite'/>
+                        </rect>
+                        <rect x='46.5' y='40' width='7' height='20' rx='5' ry='5' fill='#356aa0'
+                              transform='rotate(210 50 50) translate(0 -30)'>
+                            <animate attributeName='opacity' from='1' to='0' dur='1s' begin='0.5833333333333334s'
+                                     repeatCount='indefinite'/>
+                        </rect>
+                        <rect x='46.5' y='40' width='7' height='20' rx='5' ry='5' fill='#356aa0'
+                              transform='rotate(240 50 50) translate(0 -30)'>
+                            <animate attributeName='opacity' from='1' to='0' dur='1s' begin='0.6666666666666666s'
+                                     repeatCount='indefinite'/>
+                        </rect>
+                        <rect x='46.5' y='40' width='7' height='20' rx='5' ry='5' fill='#356aa0'
+                              transform='rotate(270 50 50) translate(0 -30)'>
+                            <animate attributeName='opacity' from='1' to='0' dur='1s' begin='0.75s'
+                                     repeatCount='indefinite'/>
+                        </rect>
+                        <rect x='46.5' y='40' width='7' height='20' rx='5' ry='5' fill='#356aa0'
+                              transform='rotate(300 50 50) translate(0 -30)'>
+                            <animate attributeName='opacity' from='1' to='0' dur='1s' begin='0.8333333333333334s'
+                                     repeatCount='indefinite'/>
+                        </rect>
+                        <rect x='46.5' y='40' width='7' height='20' rx='5' ry='5' fill='#356aa0'
+                              transform='rotate(330 50 50) translate(0 -30)'>
+                            <animate attributeName='opacity' from='1' to='0' dur='1s' begin='0.9166666666666666s'
+                                     repeatCount='indefinite'/>
+                        </rect>
+                    </svg>
+                </div>
+
+                <h3 class="loading-text">Loading</h3>
+
+                <p class="small">It may take a while to fetch your scores. Hang tight!</p>
+
+            </div>
+
+            <div class="share-container after-scores-share" style="display: none;">
+                <hr/>
+                <p class="text-center">Show your friends how to get their scores early too (don't worry, they won't see
+                    your scores)</p>
+
+                <div class="share" style="display: flex;justify-content: center; justify-items: center;">
+                    <div class="fb-like" data-href="https://earlyscores.com" data-layout="button_count"
+                         data-action="like"
+                         data-size="large" data-show-faces="true" data-share="true" style="margin-right: 3px;"></div>
+                    <a href="https://twitter.com/share" class="twitter-share-button"
+                       data-text="Get your AP scores early from anywhere in the world." data-size="large">Tweet</a>
+                    <script>!function (d, s, id) {
+                        var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/.test(d.location) ? 'http' : 'https';
+                        if (!d.getElementById(id)) {
+                            js = d.createElement(s);
+                            js.id = id;
+                            js.src = p + '://platform.twitter.com/widgets.js';
+                            fjs.parentNode.insertBefore(js, fjs);
+                        }
+                    }(document, 'script', 'twitter-wjs');</script>
+                </div>
+
+                <hr/>
+            </div>
+
+            <div class="score-container" style="display: none;">
+                <h2>Logged in successfully, loading scores.</h2>
+            </div>
+
+            <div class="ap-number-confirmation-container text-center" style="display: none;">
+                <h3 class="">The College Board has requested more information.</h3>
+                <p class="lead">This is likely your first AP test. Congrats! To view your scores, you will need to enter additional information.</p>
+
+                <div class="buttons mb-2">
+                    <button class="btn btn-success ap-number-confirm">Fill out information online</button>
+                    <a class="btn btn-primary" href="/articles/how-to-fill-out-ap-number-request.html">Fill out using another method!</a>
+                </div>
+
+                <p class="small">Online AP&reg; Number Requests are a beta feature only supported for students in the United States. 
+                    <a href="/articles/how-to-fill-out-ap-number-request.html">International students should see here for alternate methods to fill out their information.</a> 
+                    EarlyScores.com does not collect or store ANY personal information. AP&reg; Number Information entered
+                    at EarlyScores.com is transmitted to the College Board&reg; with no gaurantees. 
+                    We will send them exactly what you tell us to.</p>
+                
+                <div class="cancel-button">
+                    <button class="btn btn-default cancel-ap-number-confirm">Cancel</button>
+                </div>
+            </div>
+
+            <div class="tos-request" style="display: none;">
+                <h3>College Board asks that you accept their terms</h3>
+                <p class="small tos-box">
+
+                    <strong>
+                        By accessing your AP scores online you acknowledge and accept the College Board's
+                        </strong>
+                        <a href="http://www.collegeboard.org/site-terms/" target="_blank" title="Opens in a new window">
+                            Site Terms and Conditions
+                            <span class="visuallyhidden">
+                            Opens in a new window
+                            </span>
+                        </a>
+                        and
+                        <a href="http://www.collegeboard.org/privacy-policy/" target="_blank" title="Opens in a new window">
+                            Privacy Policy
+                            <span class="visuallyhidden">
+                            Opens in a new window
+                            </span>
+                        </a>
+                    governing the College Board's website as well as the following terms and conditions. 
+                    You acknowledge that your AP score report is for your use only and a copy or print download of 
+                    the score report cannot be used for official reporting purposes. You must request an official score 
+                    report to be sent to your selected recipients. Any additional information that you provide for account 
+                    authentication or score sending purposes will not be shared for purposes other than for use with this 
+                    system.      
+                </p>
+                <div class="text-right">
+                    <div>
+                        <div class="form-check">
+                            <input class="form-check-input accept-terms-check" type="checkbox" value="" id="tosCheck">
+                            <label class="form-check-label" for="tosCheck">
+                                Accept terms and conditions.
+                            </label>
+                        </div>
+                    </div>
+
+                    <div>
+                        <button class="btn btn-default tos-request-cancel">Cancel</button>
+                        <button class="btn btn-primary tos-request-accept disabled">Accept</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ap-number-container" style="display: none;">
+                <div class="alert alert-info ap-number-message"></div>
+                <form class="ap-number-form-container"></form>
+                <div class="ap-number-form-actions">
+                    <button class="cancel-ap-number btn btn-default">Cancel</button>
+                    <button class="submit-ap-number btn btn-primary">Submit to College Board</button>
+                </div>
+            </div>
+
+            <div class="logging-in" style="display: none;">
+                <h2>Logging you in securely.</h2>
+            </div>
+            <div class="form-container">
+
+                <h1>Log in to check your AP Scores</h1>
+
+                <div class="alert alert-danger text-center error-message" style="display: none;"></div>
+
+                <form class="form view-scores">
+                    <div class="alert alert-warning">2018 AP Scores come out July 5th at 8:00am EST.</div>
+
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Username" name="username" required />
+
+                        <p class="help-block">Enter the username you use to log in to your College Board account.</p>
+                    </div>
+                    <div class="form-group">
+                        <input type="password" class="form-control" placeholder="Password" name="password" required />
+
+                        <p class="help-block">Enter the password you use to log in to your College Board account.</p>
+                    </div>
+
+                    <div class="advanced-group alert alert-warning" style="display: none;">
+                        <div class="form-group">
+                            <b>These are very advanced features. Please only use them if you understand what they
+                                do.</b>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="tempScores">
+                                <input type="checkbox" id="tempScores"/>
+                                Fetch scores with temporary password.
+                            </label>
+
+
+                            <p class="help-block">Check this box when fetching scores with a temporary account. This
+                                ensures
+                                that your temporary scores will not be overwritten. <a href="#" target="_blank">Learn
+                                    more
+                                    about temporary score fetching.</a></p>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="forceUpdate">
+                                <input type="checkbox" id="forceUpdate"/>
+                                Force a previously temp account to update it's scores.
+                            </label>
+
+
+                            <p class="help-block">Check this box to force an account that was previously temporary to
+                                update. This will only work if the entered username and password are correct, otherwise
+                                you will probably see undetermined results.</p>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <button class="btn btn-block btn-success">
+                            View My Scores <i class="glyphicon glyphicon-play-circle"></i>
+                        </button>
+                    </div>
+
+                    <div class="text-center">
+                        <p class="small">EarlyScores <b>NEVER</b> stores your information on our servers.</p>
+                        <p class="text-center"><b><a href="#" class="open-bug-report">Contact us or get support</a></b></p>
+                    </div>
+                </form>
+
+                <hr/>
+
+                <div class="text-center">
+                    <p class="text-center">Don't have a College Board account? Make one on their site.</p>
+                    <a target="_blank"
+                       href="https://account.collegeboard.org/iamweb/smartRegister?appId=287&DURL=https://apscore.collegeboard.org/scores/view-your-scores"
+                       class="btn btn-primary">Create
+                        a <img src="https://mango.collegeboard.org/cbmango1/prod/iam/all/2/logo.png"
+                               style="height:18px;margin-bottom: 5px;"/>
+                        account &gt; </a>
+                </div>
+            </div>
+
+            <div class="share-container">
+                <hr/>
+                <p class="text-center">Show your friends how to get their scores early too:</p>
+
+                <div class="share" style="display: flex;justify-content: center; justify-items: center;">
+                    <div class="fb-like" data-href="https://earlyscores.com" data-layout="button_count"
+                         data-action="like"
+                         data-size="large" data-show-faces="true" data-share="true" style="margin-right: 3px;"></div>
+                    <a href="https://twitter.com/share" class="twitter-share-button"
+                       data-text="Get your AP scores early from anywhere in the world." data-size="large">Tweet</a>
+                    <script>!function (d, s, id) {
+                        var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/.test(d.location) ? 'http' : 'https';
+                        if (!d.getElementById(id)) {
+                            js = d.createElement(s);
+                            js.id = id;
+                            js.src = p + '://platform.twitter.com/widgets.js';
+                            fjs.parentNode.insertBefore(js, fjs);
+                        }
+                    }(document, 'script', 'twitter-wjs');</script>
+                </div>
+
+                <hr/>
+            </div>
+
+            <div class="bug">
+                <!-- <div class="text-center">
+                    <p class="small"><a href="#" class="advanced-settings">Advanced</a></p>
+                </div> -->
+
+                <p class="text-center"><b><a href="#" class="open-bug-report">Contact us or get support</a></b></p>
+            </div>
+        </div>
+        <div class="col-md-6 d-md-none">
+            <div class="media">
+                <div class="align-self-center mr-3">
+                    <i class="fa fa-users fa-3x" aria-hidden="true"></i>
+                </div>
+                <div class="media-body">
+                    <h4 class="media-heading">Trusted</h4>
+                    EarlyScores.com is the leading provider of early score access. Over 700,000 AP&reg; students trust
+                    EarlyScores to fetch their scores first.
+                </div>
+            </div>
+
+
+            <div class="media">
+                <div class="align-self-center mr-3">
+                    <i class="fa fa-check-circle-o fa-4x" aria-hidden="true"></i>
+                </div>
+                <div class="media-body">
+                    <h4 class="media-heading">Accurate</h4>
+                    <p>Your scores are pulled directly from the College Board website and displayed on your
+                        computer.</p>
+                </div>
+            </div>
+
+            <div class="media">
+                <div class="align-self-center mr-3">
+                    <i class="fa fa-plus-circle fa-4x" aria-hidden="true"></i>
+                </div>
+                <div class="media-body">
+                    <h4 class="media-heading">New: Temporary Password</h4>
+                    <p><a href="#" class="learn-more-temp">Learn more about this advanced security feature</a></p>
+                    <div class="temp-brief" style="display:none;">
+                        <p>Early Scores is proud to announce a new feature for 2017 score fetching. If you are concerned
+                            about the safety of your account, Early Scores now supports temporary fetch mode. This
+                            simple
+                            mode will allow you to fetch scores using your temporary username and password even after
+                            you've
+                            reset your password on the College Board website. Follow these steps to enable this
+                            feature:</p>
+                        <ol>
+                            <li>
+                                <a target="_blank"
+                                   href="https://cbaccount.collegeboard.org/iamweb/secure/smartUpdate?navId=www-st-acct">Navigate
+                                    to the College Board website.</a> Sign in to your account.
+                            </li>
+                            <li>If you did not follow the link above, navigate to the account settings page.</li>
+                            <li>Scroll down the page to change your password.</li>
+                            <li>Create a temporary password. Write down your temporary username and password for later
+                                use.
+                            </li>
+                            <li><a href="#" class="enable-temp-and-use">Enable advanced settings and Temporary Password
+                                mode by clicking this link</a> Sign in to Early Scores with your temporary password.
+                            </li>
+                            <li>Wait for your scores to be fetched and appear on the page.</li>
+                            <li>Head back to the College Board website and restore your real password.</li>
+                            <li>From now on, use your temporary username and password to log into Early Scores. Make
+                                sure the <b>Fetch scores with temporary password.</b> checkbox is checked, or your
+                                scores may be overwritten.
+                            </li>
+                        </ol>
+                        <p>
+                            If you need to toggle the checkbox, see the "Advanced Settings" link on the right hand side.<br/>
+                            <a href="https://github.com/jbman223/EarlyAP"
+                               target="_blank">If you would like to read
+                                more
+                                about the security in place with EarlyScores, please see our GitHub repository.</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row" style="margin-top: 20px;">
+        <div class="col-md-12 text-center">
+            <hr />
+            <p><b>Contact us or get support: <a href="mailto:support@earlyscores.com">support@earlyscores.com</a></b></p>
+
+            <p>View this project
+                on GitHub: <a href="https://github.com/jbman223/EarlyAP">https://github.com/jbman223/EarlyAP</a></p>
+
+            <p>AP&reg; is a trademark registered by the College Board, which is not affiliated with, and does not
+                endorse, this site.</p>
+
+            <p class="small text-muted"><a href="privacy.html">Privacy Policy</a></p>
+        </div>
+    </div>
+
+    <!-- <div class="modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Modal title</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <p>Modal body text goes here.</p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-primary">Save changes</button>
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div> -->
+
+    <div class="modal fade contact" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                     <h4 class="modal-title">Report a bug</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                </div>
+                <div class="modal-body">
+                    <p class="lead">Help us make Early Scores even better. If you experience an issue, please report it
+                        here
+                        and we will attempt address it as soon as possible.</p>
+
+                    <h5>Email Us!</h5>
+
+                    <p>We would love to hear from you to help you fix your issues. Email us:</p>
+
+                    <p><a href="mailto:support@earlyscores.com">support@earlyscores.com</a></p>
+
+                    <hr />
+
+                    <h5>Form</h5>
+
+                    <p>If you would rather not email us, fill out this form and we will respond with</p>
+
+                    <div class="alert alert-success after-report" style="display: none;"><b>Thanks for your help!</b> We
+                        will contact you soon.
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label control-label-left" for="email">Email Address
+                            (Optional)</label>
+                        <div class="controls">
+
+                            <input id="email" class="form-control k-textbox" data-role="text" name="email"
+                                    type="text"><span class="help-block">Enter your email if you would like to be contacted with the results of your bug request.</span>
+                        </div>
+
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label control-label-left" for="report">Report
+                            Information<span class="req"> *</span></label>
+                        <div class="controls">
+
+                        <textarea id="report" rows="3" class="form-control k-textbox" data-role="textarea"
+                                    name="report" required="required"></textarea><span class="help-block">Please detail the issue.</span>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary submit">Submit</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://cdn.rawgit.com/ricmoo/aes-js/e27b99df/index.js"></script>
+    <script src="earlyscores.js?v=2018"></script>
+    <script type="text/javascript">
+        $(".advanced-settings").click(function (e) {
+            e.preventDefault();
+            $(".advanced-group").slideToggle();
+        });
+
+        function error(message) {
+            message += "<br /> <a href='proxy.html'>Get your scores using the proxy service instead.</a>"
+            $(".loading").hide();
+            $(".form-container").show();
+            $("form")[0].reset();
+            $(".error-message").html(message).show();
+        }
+
+        function scores(scores) {
+            //YIPEE!
+            $(".form-container").hide();
+            $(".loading").hide();
+            $(".score-container").html(scores).show(function () {
+                $(".after-scores-share").show()
+            })
+        }
+
+        function debug(message) {
+            if (window.location.href.indexOf("?debug") != -1) {
+                $(".debug").html($(".debug").html() + "<br />" + message).slideDown();
+            }
+        }
+
+        $(".open-bug-report").click(function (e) {
+            e.preventDefault();
+            $(".contact").modal('show');
+        });
+
+        $(".submit").click(function (e) {
+            $(this).addClass("disabled");
+            e.preventDefault();
+            var report = $("#report").val();
+            var email = $("#email").val();
+            $.post("https://minecraftnoobtest.com/contact/store.php", {report: report, email: email}, function () {
+                $(".after-report").show(function () {
+                    window.location.reload()
+                });
+            });
+        });
+
+        $(".update-button").click(function (e) {
+           e.preventDefault();
+           $.post("https://minecraftnoobtest.com/contact/addEmailES.php", {email: $("#update_email").val()}, function () {
+               $(".update-me").text('We will contact you when scores are about to release')
+           })
+        });
+
+        $(".learn-more-security").click(function (e) {
+            e.preventDefault();
+            $(".security-brief").slideToggle();
+        })
+
+        $(".learn-more-temp").click(function (e) {
+            e.preventDefault();
+            $(".temp-brief").slideToggle();
+        })
+    </script>
+</body>
+</html>
