@@ -1,92 +1,314 @@
 /**
- * Created by jacob on 6/27/17.
+ * EARLYSCORES API | June 19, 2018
+ * Created by Jacob B.
+ * AP is a trademark registered by the College Board, which is not affiliated with, and does not endorse, EarlyScores. 
  */
-var STATUS_CODES = {
-    "-4": "Accept terms and conditions.",
-    "-3": "No scores available.",
-    "-2": "Unknown invalid fetch attempt",
-    "-1": "Invalid College Board Account",
-    "0": "Entered into queue",
-    "1": "Fetching Scores",
-    "2": "Success",
-    "7": "AP Number Requested"
-};
 
-function generate_key(password, salt, iterations) {
-    if (iterations <= 0) throw RangeException();
+const API = "https://api.earlyscores.com/scores"
 
-    var key = password + salt;
-
-    for (var i = 0; i < iterations; i++)
-        key = sha256.digest(key)
-
-    return key
+var STATUS = {
+    "ERROR": generalError,
+    "LOGIN_ERROR": loginError,
+    "SCORE_ERROR": scoreError,
+    "AP_NUMBER_ERROR": apNumberError,
+    "AP_NUMBER_REQUEST": apNumber,
+    "SCORES": scores,
+    "AP_NUMBER_SAVED": apNumberSave,
+    "TOS_REQUEST": tosRequest,
+    "TOS_ACCEPTED": tosAccepted,
+    "TIMEOUT": timeout,
+    "DOWN": down
 }
 
-function toByteArray(base64) {
-    var raw = window.atob(base64);
-    var rawLength = raw.length;
-    var array = new Uint8Array(new ArrayBuffer(rawLength));
+function message(message) {
+    $(".loading-messages").text(message).slideDown();
+}
 
-    for(i = 0; i < rawLength; i++) {
-        array[i] = raw.charCodeAt(i);
+function sendMessage(message) {
+    $(".loading-messages").text(message).slideDown();
+}
+
+function foreverMessage(message) {
+    $(".long-message").html(message).slideDown();
+}
+
+
+function scores(response) {
+    ga('send', 'event', 'login', 'scores');
+    $(".loading").hide();
+    $(".error-message").hide();
+    $(".form-container").hide();
+    $(".loading").hide();
+    $(".top-share").show();
+    $(".score-container").html(response.contents).show()
+}
+
+
+function apNumber(response) {
+    ga('send', 'event', 'login', 'ap_number');
+    $(".loading").hide();
+
+    $(".ap-number-confirmation-container").show();
+
+    $(".ap-number-message").html(response.message);
+
+    var number = $(response.contents);
+    number.find(".control-group").addClass("form-group");
+    number.find("input").addClass("form-control");
+    number.find(".outsideUsOnly").hide();
+    number.find("[for=\"inputOutsideUS\"]").hide();
+    number.find(".radio-inline").addClass("form-check form-check-inline");
+    number.find("#birthDateLabel").parent().addClass("form-inline");
+    number.find("[for=\"verifyAccount_aiCode\"]").text("High school code:");
+    number.find("#find_high_school_link").hide();
+    number.find("#verifyAccount_userProfile_person_aiCode").attr("type", "text");
+
+    $(".ap-number-form-container").html(number);
+
+    $(".ap-number-form-container").find(".box-padding-5").hide();
+    $(".ap-number-form-container").find("[name='token']").val("");
+}
+
+$(".ap-number-confirm").click(function () {
+    ga('send', 'event', 'ap_number', 'confirm');
+    $(".ap-number-confirmation-container").hide();
+    $(".ap-number-container").show();
+});
+
+$(".cancel-ap-number-confirm").click(function (e) {
+    ga('send', 'event', 'ap_number', 'cancel');
+    $(".ap-number-confirmation-container").hide();
+    $(".form-container").show();
+});
+
+function loginError(response) {
+    ga('send', 'event', 'scores', 'login_error');
+    generalError(response);
+}
+
+function scoreError(response) {
+    ga('send', 'event', 'scores', 'score_error');
+    generalError(response);
+}
+
+function apNumberError(response) {
+    ga('send', 'event', 'scores', 'ap_number_error');
+    generalError(response);
+}
+
+
+function generalError(response) {
+    $(".loading").hide();
+    $(".error-message").text(response.message).show();
+    $(".form-container").show();
+}
+
+function unknownError(response) {
+    ga('send', 'event', 'scores', 'unknown_error');
+    $(".loading").hide();
+    $(".error-message").text("A success response was received from the server but we can not process it.").show();
+    $(".form-container").show();
+}
+
+function timeout(response) {
+    ga('send', 'event', 'scores', 'timeout');
+    $(".loading").hide();
+    $(".error-message").text("The College Board website is down. Please try fetching your scores again.").show();
+    $(".form-container").show();
+}
+
+function down(response) {
+    ga('send', 'event', 'scores', 'down');
+    $(".loading").hide();
+    $(".error-message").text("The College Board website is down. Please try fetching your scores again.").show();
+    $(".form-container").show();
+}
+
+var scrollToError = null;
+
+function fieldSuccess(field) {
+    $(field).removeClass("is-invalid").parent().parent().find(".control-message").text("").hide();
+    return true;
+}
+
+function fieldError(field, message) {
+    $(field).addClass("is-invalid").parent().parent().find(".control-message").text(message).addClass("invalid-feedback").show();
+    if (scrollToError == null) {
+        scrollToError = $(field);
     }
-    return array;
+    return false;
 }
 
-function getScore(encodedScores, username, password, salt) {
-    var decryptionKey = generate_key(username + password + password + username, salt, 10000);
-    var encryptedScores = toByteArray(encodedScores);
-    var iv = encryptedScores.subarray(0, 16);
-    encryptedScores = encryptedScores.subarray(16);
-    var aesCbc = new aesjs.ModeOfOperation.cbc(decryptionKey, iv);
-    var decryptedBytes = aesCbc.decrypt(encryptedScores);
-    return aesjs.utils.utf8.fromBytes(decryptedBytes);
+function validate(field, message, invalidation = "") {
+    if ($(field).val() == invalidation) {
+        return fieldError(field, message);
+    } else {
+        return fieldSuccess(field);
+    }
 }
 
-function fetchScoresFromS3(S3Url, username, password) {
-    console.log(username, password);
-    $.getJSON(S3Url, function (data) {
-        console.log(data, S3Url);
-        if (data.tempuser) {
-            foreverMessage("Showing scores found in temporary password mode.");
-        }
+function validateTest(field, message, invalidation) {
+    if (invalidation) {
+        return fieldError(field, message);
+    } else {
+        return fieldSuccess(field);
+    }
+}
 
-        if (data.status == -2) {
-            error("Unable to fetch scores due to unknown error.");
-            return false
-        } else if (data.status == -1) {
-            if (data.scores){
-                message("Securely decrypting scores...");
-                var decScores = getScore(data.scores, username, password, data.salt);
-                var elapsed = "";
-                if (data.elapsedTime) {
-                    elapsed = "<hr /><p class='small text-center'>"+data.elapsedTime+"</p>";
-                } else {
-                    elapsed = "<hr /><p class='small text-center'>Score fetched in "+(data.endtime - data.starttime)+" seconds.</p>";
-                }
-                scores(decScores + elapsed);
-            }
-            error("Unable to fetch scores due to invalid account.");
-            return false
-        } else if (data.status == 7) {
-            error("Unable to fetch scores due to an AP Number / Additional Information request.");
-            return false
-        } else if (data.status == 0 || data.status == 1) {
-            message("Waiting for scores to be fetched...");
-            setTimeout(function () { fetchScoresFromS3(S3Url, username, password) }, 3000)
-        } else {
-            // YIPEE!
-            message("Securely decrypting scores...");
-            var decScores = getScore(data.scores, username, password, data.salt);
-            var elapsed = "";
-            if (data.elapsedTime) {
-                elapsed = "<hr /><p class='small text-center'>"+data.elapsedTime+"</p>";
+function validateAPNumberForm() {
+    scrollToError = null;
+    var valid = validate("#inputFirstName", "No first name entered.");
+    valid = valid && validate("#inputLastName", "No last name entered.");
+    valid = valid && validate("#inputAddress1", "No primary address entered.");
+    valid = valid && validate("#inputCity", "No city entered.");
+    valid = valid && validate("#inputState", "No state entered.");
+    valid = valid && validate("#inputZip", "No zip code entered.");
+    valid = valid && validate("#inputEmail", "No email entered.");
+    valid = valid && validateTest("#inputEmailConfirm", "Input confirmation does not match", 
+                          $("#inputEmailConfirm").val() == "" || $("#inputEmailConfirm").val() != $("#inputEmail").val());
+    valid = valid && validate("#verifyAccount_userProfile_person_aiCode", "Please enter a highschool code.");
+    valid = valid && validate("#inputAPYear", "AP Year is required.");
+    valid = valid && validateTest("#inputAPNumber", "You must enter a student ID or an AP number", 
+                          $("#inputAPNumber").val() == "" && $("#inputStudentID").val() == "");
+    valid = valid && validateTest("#inputStudentID", "You must enter a student ID or an AP number", 
+                          $("#inputAPNumber").val() == "" && $("#inputStudentID").val() == "");
+    if (scrollToError) {
+        $('html, body').animate({
+            scrollTop: parseInt(scrollToError.offset().top - 30)
+        }, 150);
+    }
+    scrollToError = null;
+    
+    return valid;
+}
+
+function tosRequest(resp) {
+    ga('send', 'event', 'scores', 'tos_request');
+    $(".loading").hide();
+    $(".tos-request").show();
+}
+
+function tosAccepted(resp) {
+    ga('send', 'event', 'scores', 'tos_accept');
+    message("Terms of service were accepted. Attempting to log show scores.");
+    var username = $("input[name=username]");
+    var password = $("input[name=password]");
+    login(username, password);
+}
+
+$(".accept-terms-check").change(function () {
+    if ($(this).is(":checked")) {
+        $(".tos-request-accept").removeClass("disabled");
+    } else {
+        $(".tos-request-accept").addClass("disabled");
+    }
+})
+
+$(".tos-request-accept").click(function () {
+    ga('send', 'event', 'tos', 'tos_accepted');
+    if (!$(".accept-terms-check").is(":checked")) {
+        $(".tos-request-accept").addClass("disabled");
+        return;
+    }
+
+    $(".tos-request").hide();
+    $(".loading").show();
+    message("Accepted terms of service. Contacting College Board.")
+    var username = $("input[name=username]");
+    var password = $("input[name=password]");
+    sendAPIRequest({username: username.val(), password: password.val(), tos_accept: true});
+});
+
+$(".tos-request-cancel").click(function () {
+    ga('send', 'event', 'tos', 'tos_cancelled');
+    $(".tos-request").hide();
+    $(".form-container").show();
+});
+
+function sendAPIRequest(data) {
+    $(".error-message").text("").hide();
+    $.ajax({
+        type: 'POST',
+        url: API,
+        data: JSON.stringify(data),
+        success: function (r) {
+            ga('send', 'event', 'api_request', 'success');
+            if (typeof r === "string") r = JSON.parse(r);
+            if (STATUS[r.status]) {
+                STATUS[r.status](r)
             } else {
-                elapsed = "<hr /><p class='small text-center'>Score fetched in "+(data.endtime - data.starttime)+" seconds.</p>";
+                unknownError()
             }
-            scores(decScores + elapsed);
-        }
-
-    })
+        },
+        error: function (_, status, error) {
+            ga('send', 'event', 'api_request', 'exception');
+            $(".loading").hide();
+            $(".error-message").text("There was an error connecting to the EarlyScores servers. Please try again.").show();
+            $(".form-container").show();
+        },
+        contentType: "application/json",
+        dataType: 'json'
+    });
 }
+
+function login(username, password) {
+    ga('send', 'event', 'scores', 'login');
+    var data = {username: username.val(), password: password.val()}
+    sendAPIRequest(data)
+}
+
+function apNumberSave(response) {
+    ga('send', 'event', 'scores', 'ap_number_saved');
+    message("Your AP number has been saved successfully. Attempting to log in again.");
+    var username = $("input[name=username]");
+    var password = $("input[name=password]");
+    login(username, password);
+}
+
+$(".ap-number-form-container").submit(function (e) {
+    e.preventDefault();
+});
+
+$("form.view-scores").submit(function (e) {
+    e.preventDefault();
+});
+
+$(".view-scores").submit(function (e) {
+    //fetch the username and password
+    var that = $(".form-container");
+    e.preventDefault();
+    var username = $("input[name=username]");
+    var password = $("input[name=password]");
+    that.hide();
+    $(".loading").show();
+    message("Securely logging into the College Board website");
+    login(username, password);
+});
+
+
+$(".ap-number-form-actions .cancel-ap-number").click(function (e) {
+    e.preventDefault();
+    $(".ap-number-container").hide();
+    $(".ap-number-form-container").html("");
+    $(".form-container").show();
+});
+
+$(".ap-number-form-actions .submit-ap-number").click(function (e) {
+    e.preventDefault();
+
+    if (!validateAPNumberForm()) {
+        return;
+    }
+    
+    $(".ap-number-container").hide();
+    var form_values = $(".ap-number-form-container").serialize();
+    $(".ap-number-form-container").html("");
+    var username = $("input[name=username]");
+    var password = $("input[name=password]");
+    $('html, body').animate({
+        scrollTop: parseInt($(".loading").offset().top)
+    }, 200);
+    $(".loading").show();
+    message("Securely sending AP number information to the College Board.");
+    sendAPIRequest({username: username.val(), password: password.val(), ap_number_info: form_values});
+});

@@ -1,0 +1,7 @@
+articles
+kube_files
+node_modules
+.dockerignore
+config.*
+app
+images
