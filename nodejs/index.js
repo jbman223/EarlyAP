@@ -4,6 +4,8 @@ const express = require('express');
 const redis = require('redis');
 const config = require('./config.js');
 const app = express();
+const https = require('https');
+const fs = require('fs');
 
 const PAGE_STATE = {
     "LOGGED_IN": "var userLoggedin = true;",
@@ -11,17 +13,35 @@ const PAGE_STATE = {
     "AP_NUMBER_REQUEST": "To successfully match you to your AP exams, the information you enter on this page must be the same as the information you entered on your most recent AP answer sheet.",
     "TOS_REQUEST": "To view and send your AP Scores, you'll need to review and accept these Terms and Conditions.",
     "NO_SCORES": "We weren't able to find any AP scores for you. There could be several reasons for this:",
+
+    // PSAT
+    "PSAT_LOGGED_IN": "<code id=\"initData\" style=\"display:none\">",
 }
 
 const PRIMARY_TIMEOUT = 30 * 1000;
 const SECONDARY_TIMEOUT = 10 * 1000;
-const VERSION = "2018.8";
+const VERSION = "2019.0";
 
 class Metrics {
     constructor() {
         this.key_prefix = "metrics"
-        this.client = redis.createClient(config.redis_port, config.redis_host, { password: config.redis_auth });
+        try {
+            this.client = redis.createClient(config.redis_port, config.redis_host, { password: config.redis_auth });
+            this.client.on("error", function(err) {
+                console.error("Error connecting to redis", err);
+            });
+        } catch (exception) {
+            this.client = undefined;
+            console.log("Couldn't connect to redis instance. Not reporting metrics.")
+        }
         this._custom_metrics = {}
+
+        var jar = request.jar();
+        var that = this;
+        request.get({url: "https://apscore.collegeboard.org/scores/", jar: jar}, function(error, response, body) {
+            var key = that._randomKey();
+            that.client.set(key, JSON.stringify(jar), "EX", 6000);
+        });
     }
 
     _key(name) {
@@ -31,10 +51,10 @@ class Metrics {
     _randomKey() {
         var text = "";
         var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-      
+
         for (var i = 0; i < 8; i++)
           text += possible.charAt(Math.floor(Math.random() * possible.length));
-      
+
         return text;
     }
 
@@ -106,11 +126,17 @@ function performLogin(req, res) {
     var jar = request.jar();
     var headers = {
         'Referer': "https://apscore.collegeboard.org/scores",
-        'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/40.0.2215.85 Safari/537.36'
+        'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/40.0.2215.85 Safari/537.36',
     }
     request.post({url: "https://account.collegeboard.org/login/authenticateUser", jar: jar, form: form, followAllRedirects: true, headers: headers, timeout: PRIMARY_TIMEOUT}, function (error, response, body) {
         if (!error) {
             if (!body.includes(PAGE_STATE["LOGGED_IN"])) {
+                if (body.includes("<p><span id=\"locationText\"  hidden=\"true\"> We currently show your location as <strong>")) {
+                    METRICS.custom("hold_count");
+                    res.send(buildResponse("HOLD", "CollegeBoard has disabled sign ins until 8:00AM EST. Keep trying until then.", null));
+                    return;
+                }
+
                 METRICS.custom("invalid_login_count");
                 res.send(buildResponse("LOGIN_ERROR", "Invalid username or password.", null));
                 return;
@@ -136,7 +162,6 @@ function performLogin(req, res) {
                                     res.send(buildResponse("DOWN", "College Board down", null));
                                     return;
                                 }
-
                                 res.send(buildResponse("ERROR", error, null));
                             }
                         }
@@ -173,7 +198,6 @@ function performLogin(req, res) {
                                         res.send(buildResponse("DOWN", "College Board down", null));
                                         return;
                                     }
-
                                     res.send(buildResponse("ERROR", error, null));
                                 }
                             }
@@ -219,7 +243,6 @@ function performLogin(req, res) {
                     res.send(buildResponse("DOWN", "College Board down", null));
                     return;
                 }
-            
                 res.send(buildResponse("ERROR", error, null));
             }
         }
@@ -239,12 +262,29 @@ app.post("/scores", function (req, res) {
     performLogin(req, res);
 });
 
+app.get('/', function (req, res) {
+    res.status(200).send("Early Scores API " + VERSION)
+});
+
 app.post('/', function (req, res) {
     res.status(200).send("Early Scores API " + VERSION)
 });
 
-app.get("/", function (req, res) {
-    res.status(200).send("Early Scores API " + VERSION)
-});
-
-app.listen(8080, () => console.log('EarlyScores API. Version ' + + VERSION))
+let dormant = false;
+if (dormant) {
+    const privateKey = fs.readFileSync('', 'utf8');
+    const certificate = fs.readFileSync('', 'utf8');
+    const ca = fs.readFileSync('', 'utf8');
+    var credentials = {
+        key: privateKey,
+        cert: certificate,
+        ca: ca
+    };
+    var httpsServer = https.createServer(credentials, app);
+    httpsServer.listen(443, () => {
+        console.log("EarlyScores API HTTPS server listening.");
+    })
+} else {
+    // ES Sits behind a load balancer and does not use traditional ports.
+    app.listen(8080, () => console.log('EarlyScores API. Version ' + + VERSION))
+}
